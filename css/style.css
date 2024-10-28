@@ -1,0 +1,22 @@
+body {
+    padding: 20px;
+}
+
+#canvas {
+    border: 0.5px solid black;
+}
+
+.col-scrollable {
+    max-height: 80vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.row-scrollable {
+    min-height: 35rem;
+}
+
+input[type="color"] {
+    height: 38px;
+    cursor: pointer;
+}
