@@ -2,6 +2,9 @@
 
 A web-based tool for creating and managing color grids with various gradient types. Perfect for generating color palettes, testing color combinations, and creating visual assets.
 
+![image](https://github.com/user-attachments/assets/62d017da-50e5-454b-8164-63725d3bbb00)
+
+
 ## Features
 
 ### Color Management
