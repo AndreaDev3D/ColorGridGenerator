@@ -1,30 +1,75 @@
 # Color Grid Generator
 
-No installation is required! Simply visit [Color Grid Generator](https://andreadev3d.github.io/ColorGridGenerator/) to start generating grids immediately.
-
-![Color Grid Generator](https://github.com/user-attachments/assets/bdb1e13d-38f3-4ac8-95fe-0d8e168827d3)
-
-Color Grid Generator is a free and open-source tool for creating customizable grid textures. This web-based application allows you to generate color grids with various options, including solid colors, linear gradients, radial gradients, and bi-chromatic patterns. It's designed for developers, designers, and hobbyists who need quick and flexible texture generation for games, apps, and digital art.
+A web-based tool for creating and managing color grids with various gradient types. Perfect for generating color palettes, testing color combinations, and creating visual assets.
 
 ## Features
 
-- **Add Colors**: Easily add rows of colors to your grid with the `Add Color` button.
-- **Color Selection**: Choose from a variety of color modes, including:
-  - **Solid Color**
-  - **Linear Gradient**
-  - **Radial Gradient**
-  - **Bi-Chromatic**
-- **Arrange Colors**: Drag and drop to reorder colors in the list.
-- **Save and Load**: Save your color grid configuration to a file or load a previously saved configuration.
-- **Export to Image**: Generate a PNG image of your grid to use directly in your projects.
+### Color Management
+- Add unlimited color rows
+- Four gradient types:
+  - Solid colors
+  - Bi-chromatic (split colors with adjustable orientation)
+  - Linear gradients (with adjustable angle)
+  - Radial gradients
+- Drag and drop to reorder colors
+- Duplicate existing color rows
+- Delete individual color rows
+- Clear all colors
+- Randomize all colors
+- Swap colors within a gradient
+
+### Grid Customization
+- Adjustable grid dimensions (1-16 rows and columns)
+- Automatic grid layout optimization
+- Preview updates in real-time
+
+### Import/Export
+- Save color configurations to file (.cgg format)
+- Load color configurations from file
+- Export grid as PNG image
+- Automatic save to local storage
+
+### User Interface
+- Dark/Light theme toggle
+- Mobile-responsive design
+- Floating "Add Color" button
+- Intuitive color controls
+- Touch-friendly interface
 
 ## Usage
 
-1. **Add a Color**: Click `Add Color` to add a new row to your grid.
-2. **Select Color Mode**: Choose between Solid, Linear, Radial, or Bi-Chromatic from the dropdown for each row.
-3. **Pick Colors**: Adjust the color settings for each row.
-4. **Reorder Colors**: Use the drag handles on the left to reorder colors.
-5. **Export**: Click `Save to Image` to export your grid as a PNG file.
+1. Add colors using the "Add Color" button
+2. Choose gradient type from the dropdown menu
+3. Adjust colors using the color pickers
+4. Customize gradient settings:
+   - Bi-chromatic: Toggle horizontal/vertical split
+   - Linear gradient: Adjust angle with slider
+5. Arrange colors by dragging
+6. Adjust grid size using row/column inputs
+7. Export your creation as an image or save the configuration
+
+## Technical Details
+
+Built with:
+- HTML5 Canvas for grid rendering
+- CSS Grid and Flexbox for layout
+- JavaScript ES6+ modules
+- Bootstrap 5 for UI components
+- Local Storage for persistence
+- Sortable.js for drag-and-drop functionality
+
+## Version History
+
+### v1.2.0
+- Added randomize functionality
+- Added grid size controls
+- Improved mobile responsiveness
+- Added color swap feature
+- Added floating add button
+
+## License
+
+[Add your license information here]
 
 
 

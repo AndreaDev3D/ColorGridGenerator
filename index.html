@@ -21,27 +21,37 @@
 <body class="content-fluid">
     <header class="card hstack gap-2 text-center p-2">
         <img class="logo" src="img/logo.png" alt="Color Grid Generator Logo" width="50" height="50">
-        <h1 class="mb-0">Color Grid Generator</h1>
+        <div class="d-flex align-items-baseline">
+            <h1 class="mb-0">Color Grid Generator</h1>
+            <small class="text-muted ms-2">v1.2.0</small>
+        </div>
         <button id="theme-toggle" class="btn btn-secondary ms-auto">
             <i id="theme-icon" class="bi bi-moon-stars-fill"></i>
         </button>
     </header>
 
     <div class="controls hstack gap-2 my-2">
-        <button class="btn btn-primary m-0" id="addColorRow"><i class="bi bi-paint-bucket"></i> Add Color</button>
+        <button class="btn btn-warning m-0" id="randomizeColors"><i class="bi bi-shuffle"></i> Randomize</button>
         <button class="btn btn-danger m-0" id="clearColorList"><i class="bi bi-trash-fill"></i> Clear List</button>
 
-        <button id="saveToFile" class="btn btn-primary  m-0 ms-auto">Save to File</button>
+        <button id="saveToFile" class="btn btn-primary m-0 ms-auto">
+            <i class="bi bi-file-earmark-arrow-down"></i> Save to File
+        </button>
         <input type="file" id="loadFromFile" accept=".cgg" style="display: none;">
-        <button id="loadFileButton" class="btn btn-primary  m-0"
-            onclick="document.getElementById('loadFromFile').click();">Load from
-            File</button>
+        <button id="loadFileButton" class="btn btn-primary m-0">
+            <i class="bi bi-file-earmark-arrow-up"></i> Load from File
+        </button>
 
     </div>
 
     <div class="row row-scrollable">
         <div class="col col-scrollable col-sm-12 col-lg-8 mb-3">
             <div id="colorRows" class="text-start vstack gap-2"></div>
+            <div class="floating-add-button">
+                <button class="btn btn-primary" id="addColorRow">
+                    <i class="bi bi-paint-bucket"></i> Add Color
+                </button>
+            </div>
         </div>
         <div class="col col-sm-12 col-lg-4 vstack text-center">
             <!-- <label for="canvasSize">Canvas Size:</label>
@@ -54,6 +64,19 @@
                 <option value="512">512x512</option>
                 <option value="1024">1024x1024</option>
             </select> -->
+
+            <div class="grid-controls mb-3">
+                <div class="row g-2">
+                    <div class="col-6">
+                        <label for="gridRows" class="form-label">Rows</label>
+                        <input type="number" class="form-control" id="gridRows" min="1" max="16" value="4">
+                    </div>
+                    <div class="col-6">
+                        <label for="gridCols" class="form-label">Columns</label>
+                        <input type="number" class="form-control" id="gridCols" min="1" max="16" value="4">
+                    </div>
+                </div>
+            </div>
 
             <canvas class="m-auto" id="canvas" width="512" height="512"></canvas>
             <button class="btn btn-primary m-auto px-5 my-2" id="saveImage"><i class="bi bi-download"></i> Save To
@@ -71,7 +94,7 @@
         integrity="sha512-8AwTn2Tax8NWI+SqsYAXiKT8jO11WUBzTEWRoilYgr5GWnF4fNqBRD+hCr4JRSA1eZ/qwbI+FPsM3X/PQeHgpQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <script src="js/script.js"></script>
+    <script type="module" src="js/script.js"></script>
 </body>
 
 </html>

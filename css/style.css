@@ -20,3 +20,57 @@ input[type="color"] {
     height: 38px;
     cursor: pointer;
 }
+
+.grid-controls {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.grid-controls input[type="number"] {
+    text-align: center;
+}
+
+/* Add these styles for responsive slider handling */
+@media (max-width: 768px) {
+    .angleSlider {
+        display: none;
+    }
+
+    .angleInput {
+        /* Make the number input more touch-friendly */
+        width: 70px !important;
+        height: 38px;
+        padding: 0.375rem;
+    }
+}
+
+/* Optional: Adjust the layout for better mobile experience */
+@media (max-width: 576px) {
+    .card-body {
+        flex-wrap: wrap;
+        gap: 0.5rem !important;
+    }
+
+    .dropdown {
+        flex: 1 1 100%;
+        min-width: auto !important;
+    }
+
+    .colorInput {
+        width: 50px;
+    }
+}
+
+/* Add styles for the floating add button */
+.floating-add-button {
+    position: sticky;
+    bottom: 1rem;
+    width: 100%;
+    padding: 0.5rem;
+    text-align: center;
+    background: linear-gradient(to bottom, transparent, var(--bs-body-bg) 25%);
+}
+
+.floating-add-button .btn {
+    width: 90%;
+}
