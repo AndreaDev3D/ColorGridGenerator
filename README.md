@@ -1,4 +1,4 @@
-# Color Grid Generator :[link](https://andreadev3d.github.io/ColorGridGenerator/)
+# Color Grid Generator : [website](https://andreadev3d.github.io/ColorGridGenerator/)
 
 A web-based tool for creating and managing color grids with various gradient types. Perfect for generating color palettes, testing color combinations, and creating visual assets.
 
