@@ -1,5 +1,8 @@
 body {
     padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 #canvas {
@@ -14,6 +17,7 @@ body {
 
 .row-scrollable {
     min-height: 35rem;
+    flex: 1 0 auto;
 }
 
 input[type="color"] {
@@ -88,4 +92,11 @@ input[type="color"] {
 .color-row.locked .lockColor:hover {
     background-color: var(--bs-warning-bg-subtle);
     border-color: var(--bs-warning);
+}
+
+/* Add styles for the footer */
+footer {
+    margin-top: auto;
+    font-size: 0.9rem;
+    flex-shrink: 0;
 }
