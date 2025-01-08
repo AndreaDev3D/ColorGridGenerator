@@ -74,3 +74,18 @@ input[type="color"] {
 .floating-add-button .btn {
     width: 90%;
 }
+
+/* Add styles for locked color rows */
+.color-row.locked {
+    opacity: 0.9;
+}
+
+.color-row.locked .lockColor {
+    background-color: var(--bs-warning);
+    border-color: var(--bs-warning);
+}
+
+.color-row.locked .lockColor:hover {
+    background-color: var(--bs-warning-bg-subtle);
+    border-color: var(--bs-warning);
+}

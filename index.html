@@ -23,7 +23,7 @@
         <img class="logo" src="img/logo.png" alt="Color Grid Generator Logo" width="50" height="50">
         <div class="d-flex align-items-baseline">
             <h1 class="mb-0">Color Grid Generator</h1>
-            <small class="text-muted ms-2">v1.2.0</small>
+            <small class="text-muted ms-2">v1.3.0</small>
         </div>
         <button id="theme-toggle" class="btn btn-secondary ms-auto">
             <i id="theme-icon" class="bi bi-moon-stars-fill"></i>
@@ -31,8 +31,15 @@
     </header>
 
     <div class="controls hstack gap-2 my-2">
-        <button class="btn btn-warning m-0" id="randomizeColors"><i class="bi bi-shuffle"></i> Randomize</button>
-        <button class="btn btn-danger m-0" id="clearColorList"><i class="bi bi-trash-fill"></i> Clear List</button>
+        <button class="btn btn-warning m-0" id="randomizeColors">
+            <i class="bi bi-shuffle"></i> Randomize All
+        </button>
+        <button class="btn btn-warning m-0" id="randomizeColorsOnly">
+            <i class="bi bi-palette"></i> Randomize Colors
+        </button>
+        <button class="btn btn-danger m-0" id="clearColorList">
+            <i class="bi bi-trash-fill"></i> Clear List
+        </button>
 
         <button id="saveToFile" class="btn btn-primary m-0 ms-auto">
             <i class="bi bi-file-earmark-arrow-down"></i> Save to File

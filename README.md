@@ -2,24 +2,28 @@
 
 A web-based tool for creating and managing color grids with various gradient types. Perfect for generating color palettes, testing color combinations, and creating visual assets.
 
-![image](https://github.com/user-attachments/assets/62d017da-50e5-454b-8164-63725d3bbb00)
+![image](/banner/banner_1.3.0.png)
 
 
 ## Features
 
 ### Color Management
 - Add unlimited color rows
-- Four gradient types:
+- Five gradient types:
   - Solid colors
   - Bi-chromatic (split colors with adjustable orientation)
   - Linear gradients (with adjustable angle)
   - Radial gradients
+  - Shade gradients (automatic lighter/darker variations)
 - Drag and drop to reorder colors
 - Duplicate existing color rows
 - Delete individual color rows
 - Clear all colors
-- Randomize all colors
+- Two randomization options:
+  - Randomize All (types and colors)
+  - Randomize Colors Only (preserves gradient types)
 - Swap colors within a gradient
+- Lock individual colors to prevent randomization
 
 ### Grid Customization
 - Adjustable grid dimensions (1-16 rows and columns)
@@ -38,6 +42,7 @@ A web-based tool for creating and managing color grids with various gradient typ
 - Floating "Add Color" button
 - Intuitive color controls
 - Touch-friendly interface
+- Color locking system with visual feedback
 
 ## Usage
 
@@ -47,9 +52,11 @@ A web-based tool for creating and managing color grids with various gradient typ
 4. Customize gradient settings:
    - Bi-chromatic: Toggle horizontal/vertical split
    - Linear gradient: Adjust angle with slider
-5. Arrange colors by dragging
-6. Adjust grid size using row/column inputs
-7. Export your creation as an image or save the configuration
+   - Shade: Automatically generates lighter/darker variations
+5. Lock colors you want to keep during randomization
+6. Arrange colors by dragging
+7. Adjust grid size using row/column inputs
+8. Export your creation as an image or save the configuration
 
 ## Technical Details
 
@@ -62,6 +69,12 @@ Built with:
 - Sortable.js for drag-and-drop functionality
 
 ## Version History
+
+### v1.3.0
+- Added color locking system
+- Added separate randomization modes
+- Added shade gradient type
+- Improved color management system
 
 ### v1.2.0
 - Added randomize functionality

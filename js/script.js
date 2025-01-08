@@ -17,12 +17,21 @@ class App {
     }
 
     initializeEventListeners() {
-        document.getElementById('addColorRow').addEventListener('click', () => this.addColorRow());
+        // Remove the old event listener
+        document.getElementById('addColorRow').removeEventListener('click', () => this.addColorRow());
+
+        // Add the new event listener with a proper reference to 'this'
+        const addButton = document.getElementById('addColorRow');
+        addButton.addEventListener('click', () => {
+            this.addColorRow();
+        });
+
         document.getElementById('saveImage').addEventListener('click', () => this.canvasManager.saveImage());
         document.getElementById('clearColorList').addEventListener('click', () => this.clearColorList());
         document.getElementById('saveToFile').addEventListener('click', () => this.saveToFile());
         document.getElementById('loadFromFile').addEventListener('change', (e) => this.loadFromFile(e));
         document.getElementById('randomizeColors').addEventListener('click', () => this.randomizeColors());
+        document.getElementById('randomizeColorsOnly').addEventListener('click', () => this.randomizeColorsOnly());
 
         // Listen for color changes on the container
         this.colorRowsDiv.addEventListener('colorchange', () => {
@@ -132,7 +141,7 @@ class App {
     }
 
     getRandomType() {
-        const types = ['solid', 'linear', 'radial', 'bi-chromatic'];
+        const types = ['solid', 'linear', 'radial', 'bi-chromatic', 'shade'];
         return types[Math.floor(Math.random() * types.length)];
     }
 
@@ -244,6 +253,9 @@ class App {
 
     randomizeColors() {
         this.colorRows.forEach(colorRow => {
+            // Skip if the row is locked
+            if (colorRow.isLocked()) return;
+
             const type = this.getRandomType();
             const newData = {
                 type: type,
@@ -252,6 +264,27 @@ class App {
                 biChromaticEnd: this.getRandomColor(),
                 angle: this.getRandomAngle(),
                 orientation: this.getRandomOrientation()
+            };
+            colorRow.setColorData(newData);
+        });
+
+        this.canvasManager.generateImage(this.colorRows);
+        StorageManager.saveColors(this.colorRows, this.canvasManager);
+    }
+
+    randomizeColorsOnly() {
+        this.colorRows.forEach(colorRow => {
+            // Skip if the row is locked
+            if (colorRow.isLocked()) return;
+
+            const currentData = colorRow.getColorData();
+            const newData = {
+                type: currentData.type,
+                orientation: currentData.orientation,
+                angle: currentData.angle,
+                mainColor: this.getRandomColor(),
+                gradientEnd: this.getRandomColor(),
+                biChromaticEnd: this.getRandomColor()
             };
             colorRow.setColorData(newData);
         });

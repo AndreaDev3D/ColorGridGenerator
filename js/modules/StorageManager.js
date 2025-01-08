@@ -11,7 +11,8 @@ export class StorageManager {
                     gradientEnd: colorData.gradientEnd,
                     biChromaticEnd: colorData.biChromaticEnd,
                     angle: colorData.angle,
-                    orientation: colorData.orientation
+                    orientation: colorData.orientation,
+                    locked: row.isLocked()
                 };
             })
         };

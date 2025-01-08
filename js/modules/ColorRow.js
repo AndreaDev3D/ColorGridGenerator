@@ -15,6 +15,11 @@ export class ColorRow {
             <div class="card-body hstack gap-2 ps-0 py-1 pe-1">
                 <i class="bi bi-list px-3 fw-5 drag-handle"></i>
 
+                <!-- Add lock button at the start -->
+                <button class="btn btn-secondary lockColor" type="button" title="Lock/Unlock color">
+                    <i class="bi bi-unlock"></i>
+                </button>
+
                 <!-- Gradient Type Dropdown -->
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="dropdownMenu${this.id}" style="min-width:135px;">
@@ -25,6 +30,7 @@ export class ColorRow {
                         <li><a class="dropdown-item" href="#" data-type="bi-chromatic">Bi-Chromatic</a></li>
                         <li><a class="dropdown-item" href="#" data-type="linear">Linear</a></li>
                         <li><a class="dropdown-item" href="#" data-type="radial">Radial</a></li>
+                        <li><a class="dropdown-item" href="#" data-type="shade">Shade</a></li>
                     </ul>
                 </div>
 
@@ -135,6 +141,19 @@ export class ColorRow {
 
             this.dispatchChangeEvent();
         });
+
+        // Add lock button handler
+        const lockButton = this.element.querySelector('.lockColor');
+        lockButton.addEventListener('click', () => {
+            const icon = lockButton.querySelector('i');
+            if (icon.classList.contains('bi-unlock')) {
+                icon.classList.replace('bi-unlock', 'bi-lock');
+                this.element.classList.add('locked');
+            } else {
+                icon.classList.replace('bi-lock', 'bi-unlock');
+                this.element.classList.remove('locked');
+            }
+        });
     }
 
     updateInputVisibility(type, gradientEnd, biChromaticEnd, angleLabel) {
@@ -145,8 +164,6 @@ export class ColorRow {
         biChromaticEnd.style.display = type === 'bi-chromatic' ? 'inline' : 'none';
         orientationToggle.style.display = type === 'bi-chromatic' ? 'inline' : 'none';
         angleLabel.style.display = type === 'linear' ? 'inline' : 'none';
-
-        // Show swap button for any type that uses two colors
         swapButton.style.display = ['bi-chromatic', 'linear', 'radial'].includes(type) ? 'inline' : 'none';
     }
 
@@ -165,7 +182,8 @@ export class ColorRow {
             gradientEnd: this.element.querySelector('.gradientEnd').value,
             biChromaticEnd: this.element.querySelector('.biChromaticEnd').value,
             angle: parseInt(this.element.querySelector('.angleInput').value),
-            orientation: isHorizontal ? 'horizontal' : 'vertical'
+            orientation: isHorizontal ? 'horizontal' : 'vertical',
+            locked: this.isLocked()
         };
     }
 
@@ -200,5 +218,18 @@ export class ColorRow {
                 icon.classList.replace('bi-arrow-down', 'bi-arrow-right');
             }
         }
+
+        // Set locked state if it exists in the data
+        if (data.locked) {
+            const lockButton = this.element.querySelector('.lockColor');
+            const icon = lockButton.querySelector('i');
+            icon.classList.replace('bi-unlock', 'bi-lock');
+            this.element.classList.add('locked');
+        }
+    }
+
+    // Add method to check if row is locked
+    isLocked() {
+        return this.element.classList.contains('locked');
     }
 } 

@@ -69,6 +69,9 @@ export class CanvasManager {
             case 'radial':
                 this.drawRadialGradient(x, y, width, height, colorData);
                 break;
+            case 'shade':
+                this.drawShadeGradient(x, y, width, height, colorData);
+                break;
             default:
                 this.drawSolid(x, y, width, height, colorData);
         }
@@ -121,6 +124,19 @@ export class CanvasManager {
         this.ctx.fillRect(x, y, width, height);
     }
 
+    drawShadeGradient(x, y, width, height, colorData) {
+        const { lighter, darker } = this.getLighterDarkerColors(colorData.mainColor);
+        const gradient = this.ctx.createLinearGradient(x, y, x, y + height);
+
+        // Create a three-color gradient: lighter -> original -> darker
+        gradient.addColorStop(0, lighter);    // Top: lighter version
+        gradient.addColorStop(0.5, colorData.mainColor);  // Middle: original color
+        gradient.addColorStop(1, darker);     // Bottom: darker version
+
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(x, y, width, height);
+    }
+
     // Add getters for grid dimensions
     getRows() {
         return this.rows;
@@ -143,5 +159,37 @@ export class CanvasManager {
         link.download = 'color_grid.png';
         link.href = this.canvas.toDataURL('image/png');
         link.click();
+    }
+
+    // Add this helper method to create lighter/darker colors
+    getLighterDarkerColors(color) {
+        // Convert hex to RGB
+        const hex = color.replace('#', '');
+        const r = parseInt(hex.substr(0, 2), 16);
+        const g = parseInt(hex.substr(2, 2), 16);
+        const b = parseInt(hex.substr(4, 2), 16);
+
+        // Create lighter color (increase brightness by 40%)
+        const lighterR = Math.min(255, r + (255 - r) * 0.4);
+        const lighterG = Math.min(255, g + (255 - g) * 0.4);
+        const lighterB = Math.min(255, b + (255 - b) * 0.4);
+
+        // Create darker color (decrease brightness by 40%)
+        const darkerR = r * 0.6;
+        const darkerG = g * 0.6;
+        const darkerB = b * 0.6;
+
+        // Convert back to hex
+        const lighter = '#' +
+            Math.round(lighterR).toString(16).padStart(2, '0') +
+            Math.round(lighterG).toString(16).padStart(2, '0') +
+            Math.round(lighterB).toString(16).padStart(2, '0');
+
+        const darker = '#' +
+            Math.round(darkerR).toString(16).padStart(2, '0') +
+            Math.round(darkerG).toString(16).padStart(2, '0') +
+            Math.round(darkerB).toString(16).padStart(2, '0');
+
+        return { lighter, darker };
     }
 } 
