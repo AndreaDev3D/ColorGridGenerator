@@ -11,6 +11,14 @@ class App {
         this.canvasManager = new CanvasManager('canvas');
         this.themeManager = new ThemeManager();
 
+        // Add grid warning initialization
+        this.gridRows = document.getElementById('gridRows');
+        this.gridCols = document.getElementById('gridCols');
+        this.gridWarning = document.getElementById('gridWarning');
+
+        // Initialize warning check
+        this.updateGridWarning();
+
         this.initializeEventListeners();
         this.initializeSortable();
         this.loadSavedColors();
@@ -37,6 +45,7 @@ class App {
         this.colorRowsDiv.addEventListener('colorchange', () => {
             this.canvasManager.generateImage(this.colorRows);
             StorageManager.saveColors(this.colorRows, this.canvasManager);
+            this.updateGridWarning();
         });
 
         // Listen for grid changes
@@ -60,6 +69,10 @@ class App {
                 e.target.value = '';
             }
         });
+
+        // Add grid size change listeners
+        this.gridRows.addEventListener('change', () => this.updateGridWarning());
+        this.gridCols.addEventListener('change', () => this.updateGridWarning());
     }
 
     initializeSortable() {
@@ -94,6 +107,9 @@ class App {
 
         this.canvasManager.generateImage(this.colorRows);
         StorageManager.saveColors(this.colorRows, this.canvasManager);
+
+        // Update warning after adding a row
+        this.updateGridWarning();
     }
 
     deleteColorRow(colorRow) {
@@ -103,6 +119,9 @@ class App {
             colorRow.element.remove();
             this.canvasManager.generateImage(this.colorRows);
             StorageManager.saveColors(this.colorRows, this.canvasManager);
+
+            // Update warning after deleting a row
+            this.updateGridWarning();
         }
     }
 
@@ -134,6 +153,9 @@ class App {
         this.colorRowCount = 0;
         localStorage.removeItem('colorsData');
         this.canvasManager.generateImage([]);
+
+        // Update warning after clearing the list
+        this.updateGridWarning();
     }
 
     getRandomColor() {
@@ -291,6 +313,17 @@ class App {
 
         this.canvasManager.generateImage(this.colorRows);
         StorageManager.saveColors(this.colorRows, this.canvasManager);
+    }
+
+    updateGridWarning() {
+        const totalCells = parseInt(this.gridRows.value) * parseInt(this.gridCols.value);
+        const totalColors = this.colorRows.length;
+
+        if (totalColors > totalCells) {
+            this.gridWarning.classList.remove('hidden');
+        } else {
+            this.gridWarning.classList.add('hidden');
+        }
     }
 }
 

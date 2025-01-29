@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@layer base {
+    body {
+        @apply min-h-screen flex flex-col;
+    }
+}
+
+@layer components {
+    .color-row {
+        @apply w-full;
+    }
+
+    .color-input {
+        @apply h-10 cursor-pointer;
+    }
+
+    .grid-controls {
+        @apply max-w-sm mx-auto;
+    }
+
+    .floating-add-button {
+        @apply sticky bottom-4 w-full p-2 text-center bg-gradient-to-b from-transparent to-white dark:to-gray-900;
+    }
+
+    .color-row.locked .lock-color {
+        @apply bg-yellow-500 border-yellow-500;
+    }
+
+    .color-row.locked .lock-color:hover {
+        @apply bg-yellow-400 border-yellow-500;
+    }
+
+    .dropdown-menu {
+        @apply transition-all duration-100 ease-in-out opacity-0 invisible;
+    }
+
+    .group:focus-within .dropdown-menu {
+        @apply opacity-100 visible;
+    }
+
+    .dropdown-item {
+        @apply cursor-pointer transition-colors duration-100 text-sm;
+    }
+
+    /* Style for color inputs */
+    input[type="color"] {
+        @apply h-10 w-12 cursor-pointer rounded border-0;
+        -webkit-appearance: none;
+    }
+
+    input[type="color"]::-webkit-color-swatch-wrapper {
+        @apply p-0;
+    }
+
+    input[type="color"]::-webkit-color-swatch {
+        @apply border-0 rounded;
+    }
+
+    .btn-square {
+        @apply w-10 h-10 flex items-center justify-center text-gray-700 dark:text-gray-300 transition-colors duration-200;
+    }
+}
+
+#canvas {
+    border: 0.5px solid black;
+}
+
+.col-scrollable {
+    max-height: 80vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.row-scrollable {
+    min-height: 35rem;
+    flex: 1 0 auto;
+}
+
+.grid-controls input[type="number"] {
+    text-align: center;
+}
+
+/* Add these styles for responsive slider handling */
+@media (max-width: 768px) {
+    .angleSlider {
+        display: none;
+    }
+
+    .angleInput {
+        /* Make the number input more touch-friendly */
+        width: 70px !important;
+        height: 38px;
+        padding: 0.375rem;
+    }
+}
+
+/* Optional: Adjust the layout for better mobile experience */
+@media (max-width: 576px) {
+    .card-body {
+        flex-wrap: wrap;
+        gap: 0.5rem !important;
+    }
+
+    .dropdown {
+        flex: 1 1 100%;
+        min-width: auto !important;
+    }
+
+    .colorInput {
+        width: 50px;
+    }
+}
+
+/* Add styles for the footer */
+footer {
+    margin-top: auto;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}

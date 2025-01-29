@@ -11,57 +11,79 @@ export class ColorRow {
         rowDiv.setAttribute('id', `colorRow${this.id}`);
 
         rowDiv.innerHTML = `
-        <div class="card w-100 text-start">
-            <div class="card-body hstack gap-2 ps-0 py-1 pe-1">
-                <i class="bi bi-list px-3 fw-5 drag-handle"></i>
+        <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
+            <div class="flex items-center gap-2 p-2">
+                <i class="bi bi-list px-3 text-gray-500 dark:text-gray-400 cursor-move drag-handle"></i>
 
-                <!-- Add lock button at the start -->
-                <button class="btn btn-secondary lockColor" type="button" title="Lock/Unlock color">
+                <!-- Lock button - hidden on mobile -->
+                <button class="btn-square rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 
+                              text-gray-700 dark:text-gray-300 lock-color transition-colors duration-200 hidden lg:flex" 
+                        type="button" title="Lock/Unlock color">
                     <i class="bi bi-unlock"></i>
                 </button>
 
-                <!-- Gradient Type Dropdown -->
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="dropdownMenu${this.id}" style="min-width:135px;">
-                        Solid
+                <!-- Gradient Type Dropdown - always visible -->
+                <div class="relative group">
+                    <button class="min-w-[135px] px-3 py-2 text-left bg-gray-700 hover:bg-gray-600 
+                                 rounded-md dropdown-toggle text-white flex items-center justify-between" 
+                            type="button" 
+                            data-bs-toggle="dropdown" 
+                            aria-expanded="false" 
+                            id="dropdownMenu${this.id}">
+                        <span>Solid</span>
+                        <i class="bi bi-chevron-down text-sm"></i>
                     </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu${this.id}">
-                        <li><a class="dropdown-item" href="#" data-type="solid">Solid</a></li>
-                        <li><a class="dropdown-item" href="#" data-type="bi-chromatic">Bi-Chromatic</a></li>
-                        <li><a class="dropdown-item" href="#" data-type="linear">Linear</a></li>
-                        <li><a class="dropdown-item" href="#" data-type="radial">Radial</a></li>
-                        <li><a class="dropdown-item" href="#" data-type="shade">Shade</a></li>
+                    <ul class="dropdown-menu hidden group-focus-within:block absolute left-0 mt-1 w-full 
+                               bg-gray-700 shadow-lg rounded-md z-10" 
+                        aria-labelledby="dropdownMenu${this.id}">
+                        <li><a class="dropdown-item block px-3 py-1 hover:bg-gray-600 text-white" href="#" data-type="solid">Solid</a></li>
+                        <li><a class="dropdown-item block px-3 py-1 hover:bg-gray-600 text-white" href="#" data-type="bi-chromatic">Bi-Chromatic</a></li>
+                        <li><a class="dropdown-item block px-3 py-1 hover:bg-gray-600 text-white" href="#" data-type="linear">Linear</a></li>
+                        <li><a class="dropdown-item block px-3 py-1 hover:bg-gray-600 text-white" href="#" data-type="radial">Radial</a></li>
+                        <li><a class="dropdown-item block px-3 py-1 hover:bg-gray-600 text-white" href="#" data-type="shade">Shade</a></li>
                     </ul>
                 </div>
 
-                <input type="color" class="colorInput" value="#ffffff">
-                <input type="color" class="colorInput gradientEnd" value="#00ff00" style="display:none;">
-                <input type="color" class="colorInput biChromaticEnd" value="#ff0000" style="display:none;">
+                <!-- Color inputs -->
+                <input type="color" class="color-input rounded" value="#ffffff">
+                <input type="color" class="color-input gradientEnd rounded hidden" value="#00ff00">
+                <input type="color" class="color-input biChromaticEnd rounded hidden" value="#ff0000">
                 
-                <!-- Add swap colors button -->
-                <button class="btn btn-secondary swapColors" style="display:none;" type="button" title="Swap Colors">
+                <!-- Swap colors button - hidden on mobile -->
+                <button class="btn-square rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 
+                          swapColors hidden lg:flex" 
+                        type="button" title="Swap Colors">
                     <i class="bi bi-arrow-left-right"></i>
                 </button>
 
-                <!-- Orientation toggle button for bi-chromatic -->
-                <button class="btn btn-secondary orientationToggle" style="display:none;" type="button">
+                <!-- Orientation toggle - hidden on mobile -->
+                <button class="btn-square rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 
+                          orientationToggle hidden lg:flex" 
+                        type="button">
                     <i class="bi bi-arrow-right"></i>
                 </button>
                 
-                <!-- Angle controls -->
-                <label class="angleLabel" style="display:none;">
-                    <input type="range" class="angleSlider" min="0" max="360" value="90">
-                    <input type="number" class="angleInput rounded-2 border-1 p-1 border-secondary" min="0" max="360" step="5" value="90" style="width: 60px;">
+                <!-- Angle controls - hidden on mobile -->
+                <label class="angleLabel hidden lg:flex items-center gap-2">
+                    <input type="range" class="angleSlider w-24" min="0" max="360" value="90">
+                    <input type="number" class="angleInput w-16 p-1 rounded border border-gray-300 dark:border-gray-600 hidden lg:block" 
+                           min="0" max="360" step="5" value="90">
                 </label>
                 
-                <button class="btn btn-secondary duplicateColorRow ms-auto" type="button" 
-                    title="Duplicate color row">
-                    <i class="bi bi-files"></i>
-                </button>
-                <button class="btn btn-danger deleteColorRow" type="button" 
-                    title="Delete color row">
-                    <i class="bi bi-trash"></i>
-                </button>
+                <!-- Action buttons -->
+                <div class="ml-auto flex gap-2">
+                    <!-- Duplicate button - hidden on mobile -->
+                    <button class="btn-square rounded-md bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 
+                                  duplicateColorRow hidden lg:flex" 
+                            type="button" title="Duplicate color row">
+                        <i class="bi bi-files"></i>
+                    </button>
+                    <!-- Delete button - always visible -->
+                    <button class="btn-square rounded-md bg-red-500 hover:bg-red-600 text-white deleteColorRow" 
+                            type="button" title="Delete color row">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
             </div>
         </div>`;
 
@@ -69,7 +91,7 @@ export class ColorRow {
     }
 
     initializeEventListeners() {
-        const colorInputs = this.element.querySelectorAll('.colorInput');
+        const colorInputs = this.element.querySelectorAll('.color-input');
         const gradientEndInput = this.element.querySelector('.gradientEnd');
         const biChromaticEndInput = this.element.querySelector('.biChromaticEnd');
         const angleLabel = this.element.querySelector('.angleLabel');
@@ -84,7 +106,6 @@ export class ColorRow {
                 e.preventDefault();
                 const selectedType = item.getAttribute('data-type');
                 dropdownButton.textContent = item.textContent;
-
                 this.updateInputVisibility(selectedType, gradientEndInput, biChromaticEndInput, angleLabel);
                 this.dispatchChangeEvent();
             });
@@ -120,7 +141,7 @@ export class ColorRow {
 
         const swapButton = this.element.querySelector('.swapColors');
         swapButton.addEventListener('click', () => {
-            const mainColor = this.element.querySelector('.colorInput');
+            const mainColor = this.element.querySelector('.color-input');
             const gradientEnd = this.element.querySelector('.gradientEnd');
             const biChromaticEnd = this.element.querySelector('.biChromaticEnd');
 
@@ -143,15 +164,19 @@ export class ColorRow {
         });
 
         // Add lock button handler
-        const lockButton = this.element.querySelector('.lockColor');
+        const lockButton = this.element.querySelector('.lock-color');
         lockButton.addEventListener('click', () => {
             const icon = lockButton.querySelector('i');
             if (icon.classList.contains('bi-unlock')) {
                 icon.classList.replace('bi-unlock', 'bi-lock');
                 this.element.classList.add('locked');
+                lockButton.classList.add('bg-yellow-500', 'dark:bg-yellow-600', 'text-white', 'dark:text-white');
+                lockButton.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300');
             } else {
                 icon.classList.replace('bi-lock', 'bi-unlock');
                 this.element.classList.remove('locked');
+                lockButton.classList.remove('bg-yellow-500', 'dark:bg-yellow-600', 'text-white', 'dark:text-white');
+                lockButton.classList.add('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300');
             }
         });
     }
@@ -160,11 +185,32 @@ export class ColorRow {
         const orientationToggle = this.element.querySelector('.orientationToggle');
         const swapButton = this.element.querySelector('.swapColors');
 
-        gradientEnd.style.display = ['linear', 'radial'].includes(type) ? 'inline' : 'none';
-        biChromaticEnd.style.display = type === 'bi-chromatic' ? 'inline' : 'none';
-        orientationToggle.style.display = type === 'bi-chromatic' ? 'inline' : 'none';
-        angleLabel.style.display = type === 'linear' ? 'inline' : 'none';
-        swapButton.style.display = ['bi-chromatic', 'linear', 'radial'].includes(type) ? 'inline' : 'none';
+        // Use Tailwind's hidden class instead of display:none
+        if (['linear', 'radial'].includes(type)) {
+            gradientEnd.classList.remove('hidden');
+        } else {
+            gradientEnd.classList.add('hidden');
+        }
+
+        if (type === 'bi-chromatic') {
+            biChromaticEnd.classList.remove('hidden');
+            orientationToggle.classList.remove('hidden');
+        } else {
+            biChromaticEnd.classList.add('hidden');
+            orientationToggle.classList.add('hidden');
+        }
+
+        if (type === 'linear') {
+            angleLabel.classList.remove('hidden');
+        } else {
+            angleLabel.classList.add('hidden');
+        }
+
+        if (['bi-chromatic', 'linear', 'radial'].includes(type)) {
+            swapButton.classList.remove('hidden');
+        } else {
+            swapButton.classList.add('hidden');
+        }
     }
 
     dispatchChangeEvent() {
@@ -178,7 +224,7 @@ export class ColorRow {
 
         return {
             type: dropdownButton.textContent.trim().toLowerCase(),
-            mainColor: this.element.querySelector('.colorInput').value,
+            mainColor: this.element.querySelector('.color-input').value,
             gradientEnd: this.element.querySelector('.gradientEnd').value,
             biChromaticEnd: this.element.querySelector('.biChromaticEnd').value,
             angle: parseInt(this.element.querySelector('.angleInput').value),
@@ -197,7 +243,7 @@ export class ColorRow {
         dropdownButton.textContent = data.type.charAt(0).toUpperCase() + data.type.slice(1);
 
         // Set the colors
-        this.element.querySelector('.colorInput').value = data.mainColor;
+        this.element.querySelector('.color-input').value = data.mainColor;
         gradientEndInput.value = data.gradientEnd;
         biChromaticEndInput.value = data.biChromaticEnd;
 
@@ -221,10 +267,12 @@ export class ColorRow {
 
         // Set locked state if it exists in the data
         if (data.locked) {
-            const lockButton = this.element.querySelector('.lockColor');
+            const lockButton = this.element.querySelector('.lock-color');
             const icon = lockButton.querySelector('i');
             icon.classList.replace('bi-unlock', 'bi-lock');
             this.element.classList.add('locked');
+            lockButton.classList.add('bg-yellow-500', 'dark:bg-yellow-600', 'text-white', 'dark:text-white');
+            lockButton.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300');
         }
     }
 

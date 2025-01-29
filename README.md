@@ -2,7 +2,7 @@
 
 A web-based tool for creating and managing color grids with various gradient types. Perfect for generating color palettes, testing color combinations, and creating visual assets.
 
-![image](/banner/banner_1.3.0.png)
+![image](/banner/banner_1.4.0.png)
 
 
 ## Features
@@ -64,11 +64,15 @@ Built with:
 - HTML5 Canvas for grid rendering
 - CSS Grid and Flexbox for layout
 - JavaScript ES6+ modules
-- Bootstrap 5 for UI components
+- Tailwind CSS 4 for UI components
 - Local Storage for persistence
 - Sortable.js for drag-and-drop functionality
 
 ## Version History
+
+### v1.4.0
+- Added Tailwind CSS 4
+- Added build:css script
 
 ### v1.3.0
 - Added color locking system
@@ -94,3 +98,11 @@ If you'd like to host the app locally, follow these steps:
 1. Clone this repository:
    ```bash
    git clone https://github.com/AndreaDev3D/ColorGridGenerator.git
+
+
+2. Build Tailwind CSS
+   ```bash
+   npm run build:css
+   ```
+
+
