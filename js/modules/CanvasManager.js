@@ -6,6 +6,7 @@ export class CanvasManager {
         this.canvas.height = 256;
         this.rows = 4;
         this.cols = 4;
+        this.visualizeAttribute = 'albedo';
 
         // Get grid control elements
         this.rowsInput = document.getElementById('gridRows');
@@ -36,6 +37,10 @@ export class CanvasManager {
         }));
     }
 
+    setVisualizeAttribute(attr) {
+        this.visualizeAttribute = attr;
+    }
+
     generateImage(colorRows) {
         // Calculate cell dimensions based on user-defined grid
         const cellWidth = this.canvas.width / this.cols;
@@ -59,6 +64,12 @@ export class CanvasManager {
     }
 
     drawCell(x, y, width, height, colorData) {
+        // If visualizing an attribute and it exists, use it for all types
+        if (this.visualizeAttribute && this.visualizeAttribute !== 'albedo' && colorData.attributes && colorData.attributes[this.visualizeAttribute]) {
+            this.ctx.fillStyle = colorData.attributes[this.visualizeAttribute];
+            this.ctx.fillRect(x, y, width, height);
+            return;
+        }
         switch (colorData.type) {
             case 'bi-chromatic':
                 this.drawBiChromatic(x, y, width, height, colorData);
@@ -155,8 +166,9 @@ export class CanvasManager {
     }
 
     saveImage() {
+        let suffix = this.visualizeAttribute && this.visualizeAttribute !== 'albedo' ? `_${this.visualizeAttribute}` : '';
         const link = document.createElement('a');
-        link.download = 'color_grid.png';
+        link.download = `color_grid${suffix}.png`;
         link.href = this.canvas.toDataURL('image/png');
         link.click();
     }

@@ -10,6 +10,9 @@ class App {
         this.colorRowsDiv = document.getElementById('colorRows');
         this.canvasManager = new CanvasManager('canvas');
         this.themeManager = new ThemeManager();
+        this.colorAttributes = new Map(); // Store global color attributes
+        this.visualizeAttribute = document.getElementById('visualizeAttribute');
+        this.visualizeAttributeValue = 'albedo';
 
         // Add grid warning initialization
         this.gridRows = document.getElementById('gridRows');
@@ -22,6 +25,8 @@ class App {
         this.initializeEventListeners();
         this.initializeSortable();
         this.loadSavedColors();
+        this.initializeAttributeListeners();
+        this.initializeVisualizeAttribute();
     }
 
     initializeEventListeners() {
@@ -42,9 +47,20 @@ class App {
         document.getElementById('randomizeColorsOnly').addEventListener('click', () => this.randomizeColorsOnly());
 
         // Listen for color changes on the container
-        this.colorRowsDiv.addEventListener('colorchange', () => {
+        this.colorRowsDiv.addEventListener('colorchange', (e) => {
+            // Only save color rows and canvas state, do not touch globalAttributes here
             this.canvasManager.generateImage(this.colorRows);
-            StorageManager.saveColors(this.colorRows, this.canvasManager);
+            // Save only colorRows, not globalAttributes
+            const data = JSON.parse(localStorage.getItem('colorsData')) || {};
+            data.colors = this.colorRows.map(row => row.getColorData());
+            data.rows = this.canvasManager.getRows();
+            data.cols = this.canvasManager.getCols();
+            // Preserve globalAttributes and visualizeAttribute
+            if (window.app) {
+                data.globalAttributes = Object.fromEntries(window.app.colorAttributes || []);
+                data.visualizeAttribute = window.app.visualizeAttributeValue || 'albedo';
+            }
+            localStorage.setItem('colorsData', JSON.stringify(data));
             this.updateGridWarning();
         });
 
@@ -89,6 +105,134 @@ class App {
         });
     }
 
+    initializeAttributeListeners() {
+        const addAttributeBtn = document.getElementById('addAttribute');
+        const newAttributeName = document.getElementById('newAttributeName');
+        const newAttributeColor = document.getElementById('newAttributeColor');
+
+        addAttributeBtn.addEventListener('click', () => {
+            const name = newAttributeName.value.trim();
+            const color = newAttributeColor.value;
+
+            if (name && color) {
+                this.addGlobalAttribute(name, color);
+                newAttributeName.value = '';
+            }
+        });
+    }
+
+    initializeVisualizeAttribute() {
+        this.visualizeAttribute.addEventListener('change', () => {
+            this.visualizeAttributeValue = this.visualizeAttribute.value;
+            this.updateCanvasVisualization();
+        });
+    }
+
+    addGlobalAttribute(name, color) {
+        this.colorAttributes.set(name, color);
+        this.updateAttributeList();
+        this.updateColorRowAssignableAttributes();
+        // Add the attribute to every color row if not present
+        this.colorRows.forEach(row => {
+            if (!row.attributes.has(name)) {
+                row.addAttribute(name, color);
+            }
+        });
+        this.saveToLocalStorage();
+    }
+
+    removeGlobalAttribute(name) {
+        this.colorAttributes.delete(name);
+        this.updateAttributeList();
+        this.updateColorRowAssignableAttributes();
+        // Remove the attribute from every color row
+        this.colorRows.forEach(row => {
+            if (row.attributes.has(name)) {
+                row.removeAttribute(name);
+            }
+        });
+        this.saveToLocalStorage();
+    }
+
+    updateAttributeList() {
+        const container = document.getElementById('colorAttributes');
+        container.innerHTML = '';
+
+        this.colorAttributes.forEach((color, name) => {
+            const attributeDiv = document.createElement('div');
+            attributeDiv.className = 'flex items-center gap-1 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded';
+            attributeDiv.innerHTML = `
+                <span class="text-sm">${name}</span>
+                <input type="color" value="${color}" class="global-attribute-color" data-attribute="${name}">
+                <button class="remove-global-attribute" data-attribute="${name}">
+                    <i class="bi bi-x"></i>
+                </button>
+            `;
+            container.appendChild(attributeDiv);
+        });
+
+        // Add event listeners for the new elements
+        container.querySelectorAll('.remove-global-attribute').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const name = e.target.closest('button').dataset.attribute;
+                this.removeGlobalAttribute(name);
+                this.saveToLocalStorage();
+            });
+        });
+
+        container.querySelectorAll('.global-attribute-color').forEach(input => {
+            input.addEventListener('change', (e) => {
+                const name = e.target.dataset.attribute;
+                const color = e.target.value;
+                this.colorAttributes.set(name, color);
+                this.updateAttributeList();
+                this.updateColorRowAssignableAttributes();
+                this.saveToLocalStorage();
+            });
+        });
+
+        // Update visualize attribute dropdown
+        this.updateVisualizeAttributeDropdown();
+    }
+
+    updateVisualizeAttributeDropdown() {
+        // Save current selection
+        const prev = this.visualizeAttribute.value;
+        // Remove all except albedo
+        this.visualizeAttribute.innerHTML = '<option value="albedo">albedo (default)</option>';
+        this.colorAttributes.forEach((color, name) => {
+            const opt = document.createElement('option');
+            opt.value = name;
+            opt.textContent = name;
+            this.visualizeAttribute.appendChild(opt);
+        });
+        // Restore previous selection if possible
+        if ([...this.visualizeAttribute.options].some(o => o.value === prev)) {
+            this.visualizeAttribute.value = prev;
+        } else {
+            this.visualizeAttribute.value = 'albedo';
+        }
+        this.visualizeAttributeValue = this.visualizeAttribute.value;
+        this.updateCanvasVisualization();
+    }
+
+    updateCanvasVisualization() {
+        // Pass the selected attribute to the canvas manager
+        if (typeof this.canvasManager.setVisualizeAttribute === 'function') {
+            this.canvasManager.setVisualizeAttribute(this.visualizeAttributeValue);
+        }
+        this.canvasManager.generateImage(this.colorRows);
+    }
+
+    // Update all color rows with the current global attributes
+    updateColorRowAssignableAttributes() {
+        this.colorRows.forEach(row => {
+            if (typeof row.setAvailableAttributes === 'function') {
+                row.setAvailableAttributes(this.colorAttributes);
+            }
+        });
+    }
+
     addColorRow() {
         this.colorRowCount++;
         const colorRow = new ColorRow(this.colorRowCount);
@@ -105,11 +249,18 @@ class App {
             this.duplicateColorRow(colorRow);
         });
 
+        // Set available attributes for this row
+        if (typeof colorRow.setAvailableAttributes === 'function') {
+            colorRow.setAvailableAttributes(this.colorAttributes);
+        }
+
         this.canvasManager.generateImage(this.colorRows);
         StorageManager.saveColors(this.colorRows, this.canvasManager);
 
         // Update warning after adding a row
         this.updateGridWarning();
+        // Update assignable attributes
+        this.updateColorRowAssignableAttributes();
     }
 
     deleteColorRow(colorRow) {
@@ -176,11 +327,24 @@ class App {
     }
 
     loadSavedColors() {
-        const data = StorageManager.loadColors();
+        const data = StorageManager.loadColors() || JSON.parse(localStorage.getItem('colorsData'));
         if (data) {
             // Set grid dimensions if they exist
             if (data.rows && data.cols) {
                 this.canvasManager.setGridDimensions(data.rows, data.cols);
+            }
+
+            // Restore global attributes
+            this.colorAttributes = new Map(Object.entries(data.globalAttributes || {}));
+            this.updateAttributeList();
+            this.updateColorRowAssignableAttributes();
+            // Restore visualize attribute
+            if (data.visualizeAttribute) {
+                this.visualizeAttribute.value = data.visualizeAttribute;
+                this.visualizeAttributeValue = data.visualizeAttribute;
+            } else {
+                this.visualizeAttribute.value = 'albedo';
+                this.visualizeAttributeValue = 'albedo';
             }
 
             // Load colors
@@ -198,8 +362,12 @@ class App {
                 colorRow.element.querySelector('.duplicateColorRow').addEventListener('click', () => {
                     this.duplicateColorRow(colorRow);
                 });
+                if (typeof colorRow.setAvailableAttributes === 'function') {
+                    colorRow.setAvailableAttributes(this.colorAttributes);
+                }
             });
             this.canvasManager.generateImage(this.colorRows);
+            this.updateCanvasVisualization();
         } else {
             // Generate 4 random color configurations
             const defaultColors = Array(4).fill(null).map(() => {
@@ -240,9 +408,25 @@ class App {
         const data = {
             rows: this.canvasManager.getRows(),
             cols: this.canvasManager.getCols(),
-            colors: this.colorRows.map(row => row.getColorData())
+            colors: this.colorRows.map(row => row.getColorData()),
+            globalAttributes: Object.fromEntries(this.colorAttributes),
+            visualizeAttribute: this.visualizeAttributeValue
         };
         StorageManager.saveToFile(data);
+        // Also save to localStorage for persistence
+        localStorage.setItem('colorsData', JSON.stringify(data));
+    }
+
+    // Save to localStorage on every change (for auto-persistence)
+    saveToLocalStorage() {
+        const data = {
+            rows: this.canvasManager.getRows(),
+            cols: this.canvasManager.getCols(),
+            colors: this.colorRows.map(row => row.getColorData()),
+            globalAttributes: Object.fromEntries(this.colorAttributes),
+            visualizeAttribute: this.visualizeAttributeValue
+        };
+        localStorage.setItem('colorsData', JSON.stringify(data));
     }
 
     loadFromFile(event) {
@@ -258,8 +442,39 @@ class App {
                     }
 
                     this.clearColorList();
-                    localStorage.setItem('colorsData', JSON.stringify(data));
-                    this.loadSavedColors();
+                    // Restore global attributes
+                    this.colorAttributes = new Map(Object.entries(data.globalAttributes || {}));
+                    this.updateAttributeList();
+                    this.updateColorRowAssignableAttributes();
+                    // Restore visualize attribute
+                    if (data.visualizeAttribute) {
+                        this.visualizeAttribute.value = data.visualizeAttribute;
+                        this.visualizeAttributeValue = data.visualizeAttribute;
+                    } else {
+                        this.visualizeAttribute.value = 'albedo';
+                        this.visualizeAttributeValue = 'albedo';
+                    }
+
+                    // Add color rows
+                    data.colors.forEach(colorData => {
+                        this.colorRowCount++;
+                        const colorRow = new ColorRow(this.colorRowCount);
+                        colorRow.setColorData(colorData);
+                        this.colorRows.push(colorRow);
+                        this.colorRowsDiv.appendChild(colorRow.element);
+                        // Add handlers
+                        colorRow.element.querySelector('.deleteColorRow').addEventListener('click', () => {
+                            this.deleteColorRow(colorRow);
+                        });
+                        colorRow.element.querySelector('.duplicateColorRow').addEventListener('click', () => {
+                            this.duplicateColorRow(colorRow);
+                        });
+                        if (typeof colorRow.setAvailableAttributes === 'function') {
+                            colorRow.setAvailableAttributes(this.colorAttributes);
+                        }
+                    });
+                    this.canvasManager.generateImage(this.colorRows);
+                    this.updateCanvasVisualization();
                 } catch (error) {
                     alert('Invalid file format. Please select a valid .cgg file.');
                     console.error('File loading error:', error);

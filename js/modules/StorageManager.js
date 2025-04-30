@@ -1,20 +1,18 @@
 export class StorageManager {
     static saveColors(colorRows, canvasManager) {
+        // Try to get globalAttributes and visualizeAttribute from window.app if available
+        let globalAttributes = {};
+        let visualizeAttribute = 'albedo';
+        if (window.app) {
+            globalAttributes = Object.fromEntries(window.app.colorAttributes || []);
+            visualizeAttribute = window.app.visualizeAttributeValue || 'albedo';
+        }
         const data = {
             rows: canvasManager.getRows(),
             cols: canvasManager.getCols(),
-            colors: colorRows.map(row => {
-                const colorData = row.getColorData();
-                return {
-                    type: colorData.type,
-                    mainColor: colorData.mainColor,
-                    gradientEnd: colorData.gradientEnd,
-                    biChromaticEnd: colorData.biChromaticEnd,
-                    angle: colorData.angle,
-                    orientation: colorData.orientation,
-                    locked: row.isLocked()
-                };
-            })
+            colors: colorRows.map(row => row.getColorData()),
+            globalAttributes,
+            visualizeAttribute
         };
         localStorage.setItem('colorsData', JSON.stringify(data));
     }

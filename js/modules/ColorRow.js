@@ -2,6 +2,7 @@ export class ColorRow {
     constructor(id) {
         this.id = id;
         this.element = this.createRow();
+        this.attributes = new Map(); // Store color attributes
         this.initializeEventListeners();
     }
 
@@ -85,6 +86,10 @@ export class ColorRow {
                     </button>
                 </div>
             </div>
+            <!-- Assignable attributes container -->
+            <div class="assignable-attributes flex flex-wrap gap-2 px-2 pb-1"></div>
+            <!-- Add attributes container -->
+            <div class="color-attributes flex flex-wrap gap-2 p-2 border-t border-gray-200 dark:border-gray-700"></div>
         </div>`;
 
         return rowDiv;
@@ -229,7 +234,8 @@ export class ColorRow {
             biChromaticEnd: this.element.querySelector('.biChromaticEnd').value,
             angle: parseInt(this.element.querySelector('.angleInput').value),
             orientation: isHorizontal ? 'horizontal' : 'vertical',
-            locked: this.isLocked()
+            locked: this.isLocked(),
+            attributes: Object.fromEntries(this.attributes)
         };
     }
 
@@ -274,10 +280,96 @@ export class ColorRow {
             lockButton.classList.add('bg-yellow-500', 'dark:bg-yellow-600', 'text-white', 'dark:text-white');
             lockButton.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300');
         }
+
+        if (data.attributes) {
+            this.attributes = new Map(Object.entries(data.attributes));
+            this.updateAttributeDisplay();
+        }
     }
 
     // Add method to check if row is locked
     isLocked() {
         return this.element.classList.contains('locked');
+    }
+
+    // Add new method to handle attributes
+    addAttribute(name, color) {
+        this.attributes.set(name, color);
+        this.updateAttributeDisplay();
+        this.updateAssignableAttributes();
+    }
+
+    removeAttribute(name) {
+        this.attributes.delete(name);
+        this.updateAttributeDisplay();
+        this.updateAssignableAttributes();
+    }
+
+    updateAttributeDisplay() {
+        const attributeContainer = this.element.querySelector('.color-attributes');
+        if (!attributeContainer) return;
+
+        attributeContainer.innerHTML = '';
+        this.attributes.forEach((color, name) => {
+            const attributeDiv = document.createElement('div');
+            attributeDiv.className = 'flex items-center gap-1 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded';
+            attributeDiv.innerHTML = `
+                <span class="text-sm">${name}</span>
+                <input type="color" value="${color}" class="attribute-color" data-row-attribute="${name}">
+                <button class="remove-attribute" data-row-attribute="${name}"><i class="bi bi-x"></i></button>
+            `;
+            attributeContainer.appendChild(attributeDiv);
+        });
+        // Add event listeners to attribute color inputs
+        attributeContainer.querySelectorAll('.attribute-color').forEach(input => {
+            input.addEventListener('input', (e) => {
+                const name = e.target.dataset.rowAttribute;
+                const color = e.target.value;
+                this.attributes.set(name, color);
+                this.dispatchChangeEvent();
+            });
+        });
+        // Add event listeners to remove/reset buttons
+        attributeContainer.querySelectorAll('.remove-attribute').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const name = e.target.closest('button').dataset.rowAttribute;
+                if (this.availableAttributes && this.availableAttributes.has(name)) {
+                    // Reset to global value (do not remove)
+                    this.attributes.set(name, this.availableAttributes.get(name));
+                    this.updateAttributeDisplay();
+                    this.dispatchChangeEvent();
+                } else {
+                    // Remove non-global attribute
+                    this.removeAttribute(name);
+                    this.dispatchChangeEvent();
+                }
+            });
+        });
+    }
+
+    // Add this method to set available global attributes for assignment
+    setAvailableAttributes(attributesMap) {
+        // Always store a copy, never a reference
+        this.availableAttributes = new Map(attributesMap);
+        this.updateAssignableAttributes();
+    }
+
+    updateAssignableAttributes() {
+        const container = this.element.querySelector('.assignable-attributes');
+        if (!container) return;
+        container.innerHTML = '';
+        if (!this.availableAttributes) return;
+        this.availableAttributes.forEach((color, name) => {
+            // Don't show if already assigned
+            if (this.attributes.has(name)) return;
+            const btn = document.createElement('button');
+            btn.className = 'flex items-center gap-1 px-2 py-1 rounded bg-gray-200 dark:bg-gray-700 text-sm hover:bg-gray-300 dark:hover:bg-gray-600';
+            btn.innerHTML = `<span>${name}</span><span style="display:inline-block;width:1.2em;height:1.2em;background:${color};border-radius:0.2em;"></span>`;
+            btn.addEventListener('click', () => {
+                this.addAttribute(name, color);
+                this.updateAssignableAttributes();
+            });
+            container.appendChild(btn);
+        });
     }
 } 

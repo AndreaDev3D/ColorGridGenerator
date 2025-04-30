@@ -44,7 +44,7 @@
             <img class="w-12 h-12" src="img/logo.png" alt="Color Grid Generator Logo">
             <div class="ml-4 flex items-baseline">
                 <h1 class="text-xl font-bold">Color Grid Generator</h1>
-                <span class="text-gray-500 dark:text-gray-400 ml-2 text-sm">v1.4.0</span>
+                <span class="text-gray-500 dark:text-gray-400 ml-2 text-sm">v1.4.3</span>
             </div>
         </div>
         <div class="flex items-center space-x-4">
@@ -118,6 +118,17 @@
                     </div>
                 </div>
 
+                <!-- Add this after the grid controls and before the warning/canvas -->
+                <div class="mb-2">
+                    <label for="visualizeAttribute"
+                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Visualize</label>
+                    <select id="visualizeAttribute"
+                        class="block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3">
+                        <option value="albedo">albedo (default)</option>
+                        <!-- More options will be added dynamically -->
+                    </select>
+                </div>
+
                 <!-- Add this after the grid controls -->
                 <div id="gridWarning"
                     class="hidden mb-4 p-3 bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300 rounded-md text-sm">
@@ -135,6 +146,34 @@
                     <button class="bg-blue-500 text-white px-5 py-2 rounded" id="saveImage">
                         <i class="bi bi-download"></i> Save To Image
                     </button>
+                </div>
+
+                <!-- Attribute management card -->
+                <div
+                    class="bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-300 dark:border-gray-700 p-4 mt-4 mb-4">
+                    <div class="flex flex-row justify-between items-center mb-4">
+                        <span class="text-lg font-bold text-gray-800 dark:text-gray-100">Mask Attributes</span>
+                        <button id="maskAttributesToggle"
+                            class="text-gray-500 dark:text-gray-300 focus:outline-none transition-transform"
+                            aria-label="Toggle Mask Attributes">
+                            <i class="bi bi-chevron-down text-2xl transition-transform" id="maskAttributesCaret"></i>
+                        </button>
+                    </div>
+                    <div id="maskAttributesBody">
+                        <div class="flex items-center gap-2 flex-nowrap w-full">
+                            <input type="text" id="newAttributeName" placeholder="Mask name"
+                                class="flex-1 min-w-0 bg-gray-700 text-white px-2 py-1 rounded" />
+                            <input type="color" id="newAttributeColor" class="w-10 h-10 p-0 border-0 bg-transparent" />
+                            <button id="addAttribute"
+                                class="w-16 min-w-[3rem] px-2 py-1 bg-blue-500 text-white rounded flex-shrink-0">
+                                + Add
+                            </button>
+                        </div>
+                        <hr class="my-2 border-gray-300 dark:border-gray-700">
+                        <div id="colorAttributes" class="flex flex-wrap gap-2 mt-2">
+                            <!-- Color attributes will be added here -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -158,6 +197,25 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script type="module" src="js/script.js"></script>
+
+    <script>
+        // Toggle Mask Attributes Card
+        const maskAttributesToggle = document.getElementById('maskAttributesToggle');
+        const maskAttributesBody = document.getElementById('maskAttributesBody');
+        const maskAttributesCaret = document.getElementById('maskAttributesCaret');
+        let maskAttributesOpen = true;
+        maskAttributesToggle.addEventListener('click', () => {
+            maskAttributesOpen = !maskAttributesOpen;
+            maskAttributesBody.style.display = maskAttributesOpen ? '' : 'none';
+            maskAttributesCaret.style.transform = maskAttributesOpen ? 'rotate(0deg)' : 'rotate(-90deg)';
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            window.app = new App();
+        });
+    </script>
 </body>
 
 </html>
