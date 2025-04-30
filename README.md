@@ -2,7 +2,7 @@
 
 A web-based tool for creating and managing color grids with various gradient types. Perfect for generating color palettes, testing color combinations, and creating visual assets.
 
-![image](/banner/banner_1.4.0.png)
+![image](/banner/banner_1.4.3.png)
 
 
 ## Features
@@ -43,6 +43,13 @@ A web-based tool for creating and managing color grids with various gradient typ
 - Intuitive color controls
 - Touch-friendly interface
 - Color locking system with visual feedback
+
+## New Feature: Row Attribute Reset (v1.4.x)
+
+- You can now reset a color row's attribute to its corresponding global value by clicking the X button next to the attribute in the row.
+- This action will only reset the row's attribute color to the global value; it will NOT remove or modify the global attribute itself.
+- Global attributes can only be removed or changed from the Mask Attributes management card.
+- This ensures that global attributes are always preserved, and row-level changes are safe and reversible.
 
 ## Usage
 
