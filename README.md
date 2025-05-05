@@ -27,6 +27,7 @@ A web-based tool for creating and managing color grids with various gradient typ
 
 ### Grid Customization
 - Adjustable grid dimensions (1-16 rows and columns)
+- Adjustable canvas size (up to 2K resolution)
 - Automatic grid layout optimization
 - Preview updates in real-time
 
@@ -44,12 +45,6 @@ A web-based tool for creating and managing color grids with various gradient typ
 - Touch-friendly interface
 - Color locking system with visual feedback
 
-## New Feature: Row Attribute Reset (v1.4.x)
-
-- You can now reset a color row's attribute to its corresponding global value by clicking the X button next to the attribute in the row.
-- This action will only reset the row's attribute color to the global value; it will NOT remove or modify the global attribute itself.
-- Global attributes can only be removed or changed from the Mask Attributes management card.
-- This ensures that global attributes are always preserved, and row-level changes are safe and reversible.
 
 ## Usage
 
@@ -76,6 +71,17 @@ Built with:
 - Sortable.js for drag-and-drop functionality
 
 ## Version History
+
+### v1.4.5
+
+- You can now resize image resolution.
+
+### v1.4.3
+
+- You can now reset a color row's attribute to its corresponding global value by clicking the X button next to the attribute in the row.
+- This action will only reset the row's attribute color to the global value; it will NOT remove or modify the global attribute itself.
+- Global attributes can only be removed or changed from the Mask Attributes management card.
+- This ensures that global attributes are always preserved, and row-level changes are safe and reversible.
 
 ### v1.4.0
 - Added Tailwind CSS 4
