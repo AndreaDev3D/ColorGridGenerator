@@ -204,4 +204,9 @@ export class CanvasManager {
 
         return { lighter, darker };
     }
+
+    setCanvasDimensions(width, height) {
+        this.canvas.width = width;
+        this.canvas.height = height;
+    }
 } 

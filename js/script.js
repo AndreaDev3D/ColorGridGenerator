@@ -89,6 +89,14 @@ class App {
         // Add grid size change listeners
         this.gridRows.addEventListener('change', () => this.updateGridWarning());
         this.gridCols.addEventListener('change', () => this.updateGridWarning());
+
+        // Add an event listener for the image size change inside init()
+        const imageSizeInput = document.getElementById('imageSize');
+        if (imageSizeInput) {
+            imageSizeInput.addEventListener('input', () => {
+                this.resizeCanvas();
+            });
+        }
     }
 
     initializeSortable() {
@@ -540,9 +548,27 @@ class App {
             this.gridWarning.classList.add('hidden');
         }
     }
+
+    resizeCanvas() {
+        const imageSize = parseInt(document.getElementById('imageSize').value);
+
+        if (imageSize > 0) {
+            this.canvasManager.setCanvasDimensions(imageSize, imageSize);
+
+            // If you have any grid drawing logic, redraw it here
+            // this.canvasManager.drawGrid();
+            this.updateCanvasVisualization();
+        }
+    }
 }
 
 // Initialize the app when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     const app = new App();
 });
+
+
+// Assuming this.resizeCanvas() doesn't exist yet
+// So we'll add the resizeCanvas function inside the App class
+
+

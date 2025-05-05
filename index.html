@@ -44,7 +44,7 @@
             <img class="w-12 h-12" src="img/logo.png" alt="Color Grid Generator Logo">
             <div class="ml-4 flex items-baseline">
                 <h1 class="text-xl font-bold">Color Grid Generator</h1>
-                <span class="text-gray-500 dark:text-gray-400 ml-2 text-sm">v1.4.3</span>
+                <span class="text-gray-500 dark:text-gray-400 ml-2 text-sm">v1.4.5</span>
             </div>
         </div>
         <div class="flex items-center space-x-4">
@@ -63,7 +63,7 @@
         <!-- Main content in two columns with 75/25 split -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
             <!-- Left column: Color rows (9/12 = 75%) -->
-            <div class="lg:col-span-9 space-y-2">
+            <div class="lg:col-span-7 space-y-2">
                 <!-- Left column buttons -->
                 <div class="flex flex-wrap gap-2 mb-4">
                     <button class="bg-yellow-500 text-white px-4 py-2 rounded" id="randomizeColors">
@@ -85,9 +85,8 @@
                     </button>
                 </div>
             </div>
-
             <!-- Right column: Grid controls and canvas (3/12 = 25%) -->
-            <div class="lg:col-span-3">
+            <div class="lg:col-span-5">
                 <!-- Right column buttons -->
                 <div class="flex flex-wrap gap-2 justify-center mb-4">
                     <button id="saveToFile" class="bg-blue-500 text-white px-4 py-2 rounded">
@@ -97,25 +96,12 @@
                     <button id="loadFileButton" class="bg-blue-500 text-white px-4 py-2 rounded">
                         <i class="bi bi-file-earmark-arrow-up"></i> Load from File
                     </button>
-                </div>
 
-                <div class="mb-4">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label for="gridRows"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Rows</label>
-                            <input type="number" class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm 
-                                          bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3" id="gridRows"
-                                min="1" max="16" value="4">
-                        </div>
-                        <div>
-                            <label for="gridCols"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Columns</label>
-                            <input type="number" class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm 
-                                          bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3" id="gridCols"
-                                min="1" max="16" value="4">
-                        </div>
-                    </div>
+                    <span>OR</span>
+
+                    <button class="bg-blue-500 text-white px-5 py-2 rounded" id="saveImage">
+                        <i class="bi bi-download"></i> Save To Image
+                    </button>
                 </div>
 
                 <!-- Add this after the grid controls and before the warning/canvas -->
@@ -123,7 +109,8 @@
                     <label for="visualizeAttribute"
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Visualize</label>
                     <select id="visualizeAttribute"
-                        class="block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3">
+                        class="block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3"
+                        style="height: 42px;">
                         <option value="albedo">albedo (default)</option>
                         <!-- More options will be added dynamically -->
                     </select>
@@ -142,10 +129,33 @@
                 <canvas class="mx-auto border border-gray-300 dark:border-gray-600" id="canvas" width="512"
                     height="512"></canvas>
 
-                <div class="flex justify-center mt-4">
-                    <button class="bg-blue-500 text-white px-5 py-2 rounded" id="saveImage">
-                        <i class="bi bi-download"></i> Save To Image
-                    </button>
+                <div class="mb-4">
+                    <div class="grid grid-cols-3 gap-4">
+                        <div>
+                            <label for="gridRows"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Rows</label>
+                            <input type="number"
+                                class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm 
+                                              bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:ring-blue-500 focus:border-blue-500"
+                                id="gridRows" min="1" max="16" value="4">
+                        </div>
+                        <div>
+                            <label for="gridCols"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Columns</label>
+                            <input type="number"
+                                class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm 
+                                              bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:ring-blue-500 focus:border-blue-500"
+                                id="gridCols" min="1" max="16" value="4">
+                        </div>
+                        <div>
+                            <label for="imageSize"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Image
+                                Size
+                                (pixels)</label>
+                            <input type="number" id="imageSize" min="128" max="2048" step="1" value="256"
+                                class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Attribute management card -->
